@@ -5,10 +5,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.util.UUID;
 
 @Data
 @NoArgsConstructor
@@ -17,9 +15,16 @@ import javax.persistence.Id;
 @Entity
 public class Background {
     @Id
-    @GeneratedValue
     private String id;
 
     @Column(nullable = false)
     private String name;
+
+    @OneToOne
+    private User user;
+
+    @PrePersist
+    private void ensureId() {
+        this.setId(UUID.randomUUID().toString());
+    }
 }

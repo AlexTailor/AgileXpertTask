@@ -1,15 +1,11 @@
 package com.agilexpert.task.model;
 
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.util.List;
+import java.util.UUID;
 
 @Data
 @NoArgsConstructor
@@ -19,11 +15,21 @@ import javax.persistence.Id;
 public class User {
 
     @Id
-    @GeneratedValue
     private String id;
 
     @Column(nullable = false)
     private String name;
 
+    @Singular
+    @OneToMany(mappedBy = "user", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+    private List<App> apps;
+
+    @OneToOne(mappedBy = "user", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+    private Background background;
+
+    @PrePersist
+    private void ensureId() {
+        this.setId(UUID.randomUUID().toString());
+    }
 
 }
